@@ -12,7 +12,7 @@ router.post('/:id/posts', (req, res) => {
 
 router.get('/', async (req, res) => {
     try {
-        console.log("hello")
+        console.log("get request")
         const users = await Users.get(req.query);
         res.status(200).json(users);
       } catch (error) {
@@ -24,12 +24,40 @@ router.get('/', async (req, res) => {
       }
 });
 
-router.get('/:id', (req, res) => {
-
+router.get('/:id', async (req, res) => {
+    try {
+        console.log("get by id request")
+        const users = await Users.getById(req.params.id);
+        if (users) {
+            res.status(200).json(users);
+          } else {
+            res.status(404).json({ message: 'Hub not found' });
+          }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'Error retrieving users by id'
+        })
+    }
 });
 
-router.get('/:id/posts', (req, res) => {
-
+router.get('/:id/posts', async (req, res) => {
+    try{
+        console.log('Get id posts')
+        const userPosts = await Users.getUserPosts(req.params.id)
+        if (userPosts) {
+            res.status(200).json(userPosts)
+        } else {
+            res.status(500).json({
+                message: 'Error retrieving user post id'
+            })
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            message: 'Error retrieving user post id'
+        })
+    }
 });
 
 router.delete('/:id', (req, res) => {

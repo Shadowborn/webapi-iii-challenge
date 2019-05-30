@@ -40,7 +40,7 @@ function auth(req, res, next) {
 
 server.use(logger);
 server.use(atGate);
-server.use('/users', userRouter);
+server.use('/', userRouter);
 
 server.get('/mellon', auth, (req, res) => {
   console.log('gate opening');
