@@ -3,9 +3,8 @@ const router = require('express').Router();
 // const router = express.Router();
 const Users = require('./userDb.js'); // <<<<< updated path
 const Posts = require('../posts/postDb');
-router.post('/', (req, res) => {
 
-});
+
 
 function validateBody(req, res, next) {
     if(req.body) {
@@ -59,7 +58,7 @@ router.get('/:id', validateUserId, async (req, res) => {
     }
 });
 
-router.get('/:id/posts', validateUserId, async (req, res) => {
+router.get('/:id/posts', validateUserId, validatePost, async (req, res) => {
     try{
         console.log('Get id posts')
         const userPosts = await Users.getUserPosts(req.params.id)

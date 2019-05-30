@@ -1,6 +1,7 @@
 const express = require('express');
 const helmet = require('helmet');
 const userRouter = require('./users/userRouter.js');
+const postRouter = require('./posts/postRouter.js');
 
 const server = express();
 
@@ -37,6 +38,7 @@ function auth(req, res, next) {
 server.use(logger);
 server.use(atGate);
 server.use('/users', userRouter);
+server.use('/posts', postRouter);
 
 server.get('/mellon', auth, (req, res) => {
   console.log('gate opening');
