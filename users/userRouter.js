@@ -2,12 +2,30 @@ const express = 'express';
 const router = require('express').Router();
 // const router = express.Router();
 const Users = require('./userDb.js'); // <<<<< updated path
+const Posts = require('../posts/postDb');
 router.post('/', (req, res) => {
 
 });
 
-router.post('/:id/posts', (req, res) => {
-    
+function validateBody(req, res, next) {
+    if(req.body) {
+        next()
+    } else {
+        res.status(400).json({message: 'Please provide data'});
+    }
+}
+
+router.post('/:id/posts', validateBody, async (req, res) => {
+    try {
+        const posts = await Posts.insert(req.body);
+        res.status(201).json(posts);
+      } catch (error) {
+        // log error to database
+        console.log(error);
+        res.status(500).json({
+          message: 'Error adding the post',
+        });
+      }
 });
 
 router.get('/', async (req, res) => {
@@ -75,8 +93,17 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-router.put('/:id', (req, res) => {
-
+router.put('/:id', async (req, res) => {
+    const user = Users.find(h => h.id == req.params.id);
+    
+    if (!user) {
+      res.status(404).json({ message: 'user does not exist' });
+    } else {
+      // modify the existing hobbit
+      Object.assign(user, req.body);
+  
+      res.status(200).json(user);
+    }
 });
 
 //custom middleware
